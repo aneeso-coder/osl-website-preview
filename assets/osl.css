@@ -605,6 +605,24 @@ input:hover, select:hover, textarea:hover { border-color: var(--ink); }
 .foot ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: .5rem; margin-top: .9rem; }
 .foot a { color: var(--ink); }
 .foot a:hover { color: var(--mulberry); }
+/* Cookie consent banner — self-contained, theme-aware, non-blocking. */
+.cookie-banner {
+  position: fixed; left: 1rem; right: 1rem; bottom: 1rem; z-index: 60;
+  max-width: 32rem; margin-inline: auto;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line-strong); border-radius: var(--radius);
+  box-shadow: 0 8px 30px rgba(0,0,0,.22);
+  padding: 1.1rem 1.25rem; display: flex; flex-direction: column; gap: .7rem;
+}
+.cookie-banner[hidden] { display: none; }
+.cookie-banner h2 { font-family: var(--font-display); font-weight: 600; font-size: var(--step-1); margin: 0; }
+.cookie-banner p { margin: 0; font-size: var(--step--1); color: var(--ink-2); line-height: 1.5; }
+.cookie-banner__actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .2rem; }
+.cookie-banner__actions .btn { flex: 1 1 auto; justify-content: center; }
+@media (min-width: 40rem) { .cookie-banner { left: auto; right: 1.5rem; bottom: 1.5rem; margin-inline: 0; } }
+@media (prefers-reduced-motion: no-preference) { .cookie-banner { animation: cookie-in .25s ease-out; } }
+@keyframes cookie-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
 /* Consent-gated map — placeholder until the visitor opts in, then holds the iframe. */
 .map { position: relative; aspect-ratio: 4 / 3; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface-2); overflow: hidden; }
 .map__prompt { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; text-align: center; padding: 1.5rem; }
