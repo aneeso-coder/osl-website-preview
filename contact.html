@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://obsidiansupportedliving.co.uk/assets/img/obsidian-social-share.jpg">
 <meta property="og:locale" content="en_GB">
-<link rel="stylesheet" href="assets/osl.css?v=1">
+<link rel="stylesheet" href="assets/osl.css?v=2">
 <script>(function(){try{var t=localStorage.getItem("osl-theme");if(t){document.documentElement.setAttribute("data-theme",t);}}catch(e){}})();</script>
 <script type="application/ld+json">
 {
@@ -323,12 +323,23 @@
             NG16 2JW
           </address>
           <p class="muted">We support people across <strong>Nottinghamshire</strong>. The address above is our office &mdash; please call before visiting.</p>
-          <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Bridge%20House%2C%20Hardy%20Close%2C%20Kimberley%2C%20Nottingham%2C%20NG16%202JW">Open our address in Google Maps</a> <span class="small muted">(opens an external map service)</span></p>
-          <div class="note">
-        <span class="tag">Placeholder</span>
-        <p><strong>No map embedded.</strong></p>
-        <p class="small">A map has deliberately not been embedded: every third-party map embed loads external scripts and sets cookies, which would require a cookie banner and contradict the accessibility and performance goals. Recommended: either a static map image with descriptive alt text and a link out (as above), or a consent-gated embed once the Cookie Policy is finalised.</p>
-      </div>
+          <!-- Consent-gated map: Google's iframe (and its cookies) load ONLY when the user
+               clicks (see osl.js). Keeps the page free of third-party requests by default,
+               in line with the Cookie Policy. The text link below always works as a fallback.
+               data-map-src uses the no-API-key embed. For a guaranteed-official embed, open
+               Google Maps -> Share -> "Embed a map", copy the src from the <iframe> it gives
+               you (a .../maps/embed?pb=... URL) and paste it into data-map-src below. -->
+          <div class="map" id="office-map" data-map-src="https://www.google.com/maps?q=Bridge%20House%2C%20Hardy%20Close%2C%20Kimberley%2C%20Nottingham%2C%20NG16%202JW&amp;output=embed">
+            <div class="map__prompt">
+              <p>The map is provided by Google and sets cookies. It will load only if you choose to show it.</p>
+              <button class="btn btn--primary map__load" type="button">Show map</button>
+            </div>
+          </div>
+          <div class="btn-row" style="margin-top:1rem">
+            <a class="btn btn--primary" href="https://www.google.com/maps/dir/?api=1&amp;destination=Bridge%20House%2C%20Hardy%20Close%2C%20Kimberley%2C%20Nottingham%2C%20NG16%202JW" target="_blank" rel="noopener">Get directions</a>
+            <a class="btn btn--ghost" href="https://www.google.com/maps/search/?api=1&amp;query=Bridge%20House%2C%20Hardy%20Close%2C%20Kimberley%2C%20Nottingham%2C%20NG16%202JW" target="_blank" rel="noopener">Open in Google Maps</a>
+          </div>
+          <p class="small muted" style="margin-top:.5rem">Both open in a new tab. &ldquo;Get directions&rdquo; routes from your current location to our office.</p>
         </div>
 
         <div class="stack" style="gap:1rem">
@@ -427,6 +438,6 @@
   </div>
 </footer>
 
-<script src="assets/osl.js?v=1" defer></script>
+<script src="assets/osl.js?v=2" defer></script>
 </body>
 </html>
