@@ -113,6 +113,27 @@
     paint();
   });
 
+  /* ---- Consent-gated map --------------------------------------------
+     The Google Maps iframe is injected only after an explicit click, so no
+     third-party request or cookie is made until the visitor opts in. */
+  var mapEl = document.getElementById("office-map");
+  if (mapEl) {
+    var loadBtn = mapEl.querySelector(".map__load");
+    if (loadBtn) {
+      loadBtn.addEventListener("click", function () {
+        var src = mapEl.getAttribute("data-map-src");
+        if (!src) return;
+        var frame = document.createElement("iframe");
+        frame.src = src;
+        frame.title = "Map showing the Obsidian Supported Living office in Kimberley, Nottingham";
+        frame.loading = "lazy";
+        frame.referrerPolicy = "no-referrer-when-downgrade";
+        mapEl.innerHTML = "";
+        mapEl.appendChild(frame);
+      });
+    }
+  }
+
   /* ---- Footer year --------------------------------------------------- */
   var y = document.querySelector("[data-year]");
   if (y) {
