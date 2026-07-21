@@ -1,0 +1,603 @@
+@charset "utf-8";
+/* ==========================================================================
+   Obsidian Supported Living — stylesheet
+   Palette: obsidian (volcanic glass) — plum-black ground, mulberry identity,
+   gold sheen signal. Every text/background pair below clears WCAG 2.2 AA.
+   All colour is applied through tokens; themes redefine tokens only.
+   ========================================================================== */
+
+/* ---------- Tokens: light (default) ---------- */
+:root {
+  --paper:        #FBF8F9;  /* page ground — white with a plum bias           */
+  --surface:      #F2EAEE;  /* cards, insets                                  */
+  --surface-2:    #E9DEE5;  /* pressed / alt rows                             */
+  --ink:          #1C1620;  /* body text            16.8:1 on paper           */
+  --ink-2:        #4E4553;  /* secondary text        8.6:1 on paper           */
+  --mulberry:     #7B2352;  /* identity + links      9.0:1 on paper           */
+  --mulberry-2:   #5E1A3F;  /* link hover           12.4:1 on paper           */
+  --sheen:        #E39B2E;  /* signal — fill only on light, never text        */
+  --line:         #E2D7DD;  /* decorative rules                               */
+  --line-strong:  #8B7C86;  /* control borders       3.7:1 on paper           */
+  --focus:        #7B2352;
+  --btn-fill:     #7B2352;
+  --btn-text:     #FBF8F9;
+  --shadow:       0 1px 2px rgba(28,22,32,.05), 0 10px 28px -14px rgba(28,22,32,.22);
+
+  --font-display: Charter, "Bitstream Charter", "Iowan Old Style", "Sitka Text",
+                  Cambria, Georgia, "Times New Roman", serif;
+  --font-body:    "Source Sans 3", "Source Sans Pro", "Segoe UI", "Avenir Next",
+                  system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-util:    ui-monospace, "SF Mono", SFMono-Regular, "Cascadia Mono",
+                  "Roboto Mono", Consolas, monospace;
+
+  --measure: 65ch;
+  --wrap: 74rem;
+  --gutter: clamp(1.25rem, 5vw, 3rem);
+  --radius: 4px;
+
+  --step--1: clamp(0.9375rem, 0.92rem + 0.1vw, 1rem);
+  --step-0:  clamp(1.0625rem, 1.03rem + 0.18vw, 1.1875rem);
+  --step-1:  clamp(1.25rem, 1.19rem + 0.3vw, 1.4375rem);
+  --step-2:  clamp(1.5rem, 1.38rem + 0.6vw, 1.875rem);
+  --step-3:  clamp(1.875rem, 1.66rem + 1.05vw, 2.5rem);
+  --step-4:  clamp(2.25rem, 1.85rem + 2vw, 3.5rem);
+}
+
+/* ---------- Tokens: dark ---------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper:       #15111A;
+    --surface:     #1F1926;
+    --surface-2:   #2A2233;
+    --ink:         #F0E9ED;  /* 15.6:1 */
+    --ink-2:       #B9AEBC;  /*  8.0:1 */
+    --mulberry:    #D98FB8;  /*  7.5:1 */
+    --mulberry-2:  #EFB4D2;
+    --sheen:       #E39B2E;  /*  8.0:1 — usable as text on this ground */
+    --line:        #332B3B;
+    --line-strong: #7E7288;  /*  4.1:1 */
+    --focus:       #E39B2E;
+    --btn-fill:    #A63B70;  /*  3.1:1 vs ground; white text 6.0:1 */
+    --btn-text:    #FFFFFF;
+    --shadow:      0 1px 2px rgba(0,0,0,.5), 0 10px 28px -14px rgba(0,0,0,.7);
+  }
+}
+
+/* Explicit user choice must beat the media query in BOTH directions. */
+:root[data-theme="dark"] {
+  --paper: #15111A; --surface: #1F1926; --surface-2: #2A2233;
+  --ink: #F0E9ED; --ink-2: #B9AEBC;
+  --mulberry: #D98FB8; --mulberry-2: #EFB4D2; --sheen: #E39B2E;
+  --line: #332B3B; --line-strong: #7E7288; --focus: #E39B2E;
+  --btn-fill: #A63B70; --btn-text: #FFFFFF;
+  --shadow: 0 1px 2px rgba(0,0,0,.5), 0 10px 28px -14px rgba(0,0,0,.7);
+}
+:root[data-theme="light"] {
+  --paper: #FBF8F9; --surface: #F2EAEE; --surface-2: #E9DEE5;
+  --ink: #1C1620; --ink-2: #4E4553;
+  --mulberry: #7B2352; --mulberry-2: #5E1A3F; --sheen: #E39B2E;
+  --line: #E2D7DD; --line-strong: #8B7C86; --focus: #7B2352;
+  --btn-fill: #7B2352; --btn-text: #FBF8F9;
+  --shadow: 0 1px 2px rgba(28,22,32,.05), 0 10px 28px -14px rgba(28,22,32,.22);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html { font-size: 106.25%; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  /* Long strings (emails, URLs) must wrap rather than force horizontal overflow
+     on narrow phones. overflow-x:hidden above only clips; this actually fixes the flow. */
+  overflow-wrap: break-word;
+}
+img, svg, video { display: block; max-width: 100%; }
+img { height: auto; }
+input, button, textarea, select { font: inherit; color: inherit; }
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; line-height: 1.15; text-wrap: balance; }
+p, li { text-wrap: pretty; }
+
+/* ---------- Focus: visible everywhere, on every ground ---------- */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+:where(a, button, input, select, textarea, summary, [tabindex]):focus:not(:focus-visible) { outline: none; }
+
+.skip-link {
+  position: absolute; left: var(--gutter); top: -100%;
+  z-index: 100; padding: .75rem 1.25rem;
+  background: var(--btn-fill); color: var(--btn-text);
+  font-weight: 600; text-decoration: none; border-radius: var(--radius);
+}
+.skip-link:focus { top: .75rem; }
+
+/* ---------- Layout primitives ---------- */
+.wrap { width: min(100% - (var(--gutter) * 2), var(--wrap)); margin-inline: auto; }
+.prose { max-width: var(--measure); display: flex; flex-direction: column; gap: 1.1em; }
+.prose h3 { margin-top: .6em; }
+.stack { display: flex; flex-direction: column; }
+.section { padding-block: clamp(3rem, 8vw, 6rem); }
+.section--tight { padding-block: clamp(2rem, 5vw, 3.5rem); }
+
+/* Full-bleed obsidian ledger band — tokens re-scoped, components untouched. */
+.band {
+  --paper: #17131C; --surface: #221C29; --surface-2: #2C2435;
+  --ink: #F2ECEF; --ink-2: #BEB3C2;
+  --mulberry: #D98FB8; --mulberry-2: #EFB4D2;
+  --line: #372E40; --line-strong: #7E7288;
+  --focus: #E39B2E;
+  --btn-fill: #E39B2E;      /* the one place the sheen goes bold */
+  --btn-text: #17131C;      /* 9.0:1 */
+  --shadow: none;
+  background: var(--paper);
+  color: var(--ink);
+  position: relative;
+}
+/* Conchoidal fracture: a single sheen line across the band's leading edge. */
+.band::before {
+  content: ""; position: absolute; inset-inline: 0; top: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--sheen) 22%, transparent 60%);
+  opacity: .75;
+}
+
+/* ---------- Type helpers ---------- */
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--mulberry);
+  display: flex; align-items: center; gap: .7rem;
+}
+.eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.band .eyebrow { color: var(--sheen); }
+
+h1 { font-size: var(--step-4); letter-spacing: -0.02em; }
+h2 { font-size: var(--step-3); letter-spacing: -0.015em; }
+h3 { font-size: var(--step-1); letter-spacing: -0.01em; }
+h4 { font-size: var(--step-0); letter-spacing: -0.005em; }
+
+.lede { font-size: var(--step-1); line-height: 1.5; color: var(--ink-2); max-width: 58ch; }
+.muted { color: var(--ink-2); }
+.small { font-size: var(--step--1); }
+/* .ref = monospace, RESERVED for machine identifiers only (CQC IDs, company number).
+   Addresses, phone numbers and emails are read as language, not codes -> body font. */
+.ref { font-family: var(--font-util); font-size: .92em; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.tnum { font-variant-numeric: tabular-nums; }
+
+a { color: var(--mulberry); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+/* Emails carry <wbr> hints (after @, before .co.uk) so they break at natural points,
+   not mid-word. break-word only force-splits a segment as a last resort at very narrow
+   widths. Long URLs with no hints still get anywhere as a backstop. */
+a[href^="mailto:"], .ledger__v, address { overflow-wrap: break-word; }
+a[href^="http"] { overflow-wrap: anywhere; }
+a:hover { color: var(--mulberry-2); text-decoration-thickness: 2px; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  padding: .8rem 1.4rem; min-height: 44px;
+  font-weight: 700; font-size: var(--step-0); text-decoration: none;
+  border: 2px solid transparent; border-radius: var(--radius);
+  cursor: pointer; transition: transform .12s ease, background-color .12s ease;
+}
+.btn--primary { background: var(--btn-fill); color: var(--btn-text); border-color: var(--btn-fill); }
+.btn--primary:hover { background: var(--mulberry-2); border-color: var(--mulberry-2); color: var(--paper); }
+.band .btn--primary:hover { background: #F4B454; border-color: #F4B454; color: var(--paper); }
+.btn--ghost { background: transparent; color: var(--ink); border-color: var(--line-strong); }
+.btn--ghost:hover { background: var(--surface); border-color: var(--ink); color: var(--ink); }
+.btn:active { transform: translateY(1px); }
+@media (prefers-reduced-motion: reduce) { .btn { transition: none; } .btn:active { transform: none; } }
+.btn-row { display: flex; flex-wrap: wrap; gap: .75rem; }
+
+/* ---------- Header ---------- */
+.masthead { border-bottom: 1px solid var(--line); background: var(--paper); position: relative; z-index: 20; }
+
+.utility {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--step--1);
+}
+.utility__in { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; flex-wrap: wrap; padding-block: .45rem; }
+.utility__area { margin-right: auto; color: var(--ink-2); font-weight: 600; }
+.utility a { font-weight: 700; }
+
+.masthead__in { display: flex; align-items: center; gap: 1rem; padding-block: .9rem; }
+/* On the narrowest phones the brand + menu + theme buttons must still fit the row.
+   Tighten the gap and let the brand shrink rather than overflowing the viewport. */
+@media (max-width: 22rem) { .masthead__in { gap: .5rem; } }
+
+.brand { display: flex; align-items: center; gap: .7rem; text-decoration: none; color: var(--ink); margin-right: auto; min-width: 0; }
+.brand__mark { width: 40px; height: 40px; flex: none; }
+/* Theme-aware logo: mulberry mark on the light header, light-mulberry on the dark
+   header. Two small PNGs swapped by theme — robust everywhere, no mask/SVG-filter
+   dependency. The visible "Obsidian Supported Living" text carries the name for
+   screen readers, so the icon is decorative (alt=""). */
+.brand__mark--dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .brand__mark--light { display: none; }
+  :root:not([data-theme="light"]) .brand__mark--dark  { display: inline-block; }
+}
+:root[data-theme="dark"] .brand__mark--light { display: none; }
+:root[data-theme="dark"] .brand__mark--dark  { display: inline-block; }
+.brand__name { font-family: var(--font-display); font-weight: 700; font-size: var(--step-1); line-height: 1.05; letter-spacing: -.02em; }
+.brand__tag { display: block; font-family: var(--font-body); font-size: .6rem; letter-spacing: .16em; text-transform: uppercase; color: var(--mulberry); font-weight: 700; }
+
+.nav__list { display: flex; align-items: center; gap: .25rem; list-style: none; padding: 0; }
+.nav__link {
+  display: block; padding: .55rem .8rem; border-radius: var(--radius);
+  text-decoration: none; color: var(--ink); font-weight: 600;
+}
+.nav__link:hover { background: var(--surface); color: var(--ink); }
+.nav__link[aria-current="page"] { color: var(--mulberry); box-shadow: inset 0 -3px 0 var(--mulberry); border-radius: 0; }
+
+.nav__toggle { display: none; }
+.menu-btn { display: none; }
+
+/* Submenu */
+.nav__item--has-menu { position: relative; }
+.nav__disclosure {
+  display: flex; align-items: center; gap: .35rem;
+  padding: .55rem .8rem; border: 0; background: transparent;
+  font-weight: 600; border-radius: var(--radius); cursor: pointer;
+}
+.nav__disclosure:hover { background: var(--surface); }
+.nav__disclosure[aria-current="page"] { color: var(--mulberry); box-shadow: inset 0 -3px 0 var(--mulberry); border-radius: 0; }
+.nav__disclosure svg { width: .7em; height: .7em; transition: transform .15s ease; }
+.nav__disclosure[aria-expanded="true"] svg { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .nav__disclosure svg { transition: none; } }
+.submenu {
+  list-style: none; padding: .35rem; margin: 0;
+  position: absolute; top: calc(100% + .5rem); left: 0; z-index: 30;
+  min-width: 14rem;
+  background: var(--paper); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.submenu[hidden] { display: none; }
+.submenu a {
+  display: block; padding: .45rem .7rem; border-radius: var(--radius);
+  text-decoration: none; color: var(--ink); font-weight: 600;
+  font-size: var(--step--1); line-height: 1.3;
+  /* Single-line rows: the menu sizes to its longest label rather than wrapping
+     the two long ones and leaving the rows uneven. */
+  white-space: nowrap;
+}
+.submenu a:hover { background: var(--surface); color: var(--mulberry); }
+
+.theme-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; flex: none;
+  border: 1px solid var(--line-strong); border-radius: var(--radius);
+  background: transparent; cursor: pointer;
+}
+.theme-btn:hover { background: var(--surface); }
+.theme-btn svg { width: 20px; height: 20px; }
+.theme-btn .icon-sun { display: none; }
+:root[data-theme="dark"] .theme-btn .icon-sun { display: block; }
+:root[data-theme="dark"] .theme-btn .icon-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-btn .icon-sun { display: block; }
+  :root:not([data-theme="light"]) .theme-btn .icon-moon { display: none; }
+}
+
+@media (max-width: 60rem) {
+  .menu-btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    min-height: 44px; padding: .5rem .85rem; font-weight: 700;
+    border: 1px solid var(--line-strong); border-radius: var(--radius);
+    background: transparent; cursor: pointer;
+  }
+  .nav { position: absolute; left: 0; right: 0; top: 100%; background: var(--paper); border-bottom: 1px solid var(--line); box-shadow: var(--shadow); }
+  .nav[hidden] { display: none; }
+  .nav__list { flex-direction: column; align-items: stretch; gap: 0; padding: .75rem var(--gutter) 1.25rem; }
+  .nav__link, .nav__disclosure { width: 100%; padding: .8rem .5rem; font-size: var(--step-1); border-bottom: 1px solid var(--line); border-radius: 0; }
+  .nav__disclosure { justify-content: space-between; }
+  .nav__link[aria-current="page"], .nav__disclosure[aria-current="page"] { box-shadow: inset 3px 0 0 var(--mulberry); padding-left: .9rem; }
+  .submenu { position: static; box-shadow: none; border: 0; border-bottom: 1px solid var(--line); background: var(--surface); margin: 0; padding: .4rem .5rem; }
+  .utility__area { display: none; }
+}
+
+/* ---------- Hero ---------- */
+.hero { padding-block: clamp(2.5rem, 7vw, 5rem); }
+.hero__grid { display: grid; gap: clamp(2rem, 5vw, 3.5rem); align-items: start; }
+@media (min-width: 62rem) { .hero__grid { grid-template-columns: 1.15fr .85fr; } }
+.hero h1 { margin-bottom: .5rem; }
+.hero h1 em { font-style: normal; color: var(--mulberry); }
+.hero__body { display: flex; flex-direction: column; gap: 1.5rem; }
+
+/* Faceted obsidian panel — the conchoidal fracture, kept to a whisper. */
+.facet {
+  --paper: #17131C; --surface: #221C29;
+  --ink: #F2ECEF; --ink-2: #BEB3C2;
+  --mulberry: #D98FB8; --line: #372E40; --line-strong: #7E7288;
+  --focus: #E39B2E; --btn-fill: #E39B2E; --btn-text: #17131C;
+  background: var(--paper); color: var(--ink);
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  border-radius: var(--radius);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%);
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; gap: 1.25rem;
+}
+.facet::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(118deg, transparent 38%, rgba(227,155,46,.16) 49%, rgba(227,155,46,0) 51%, transparent 62%);
+}
+.facet h2, .facet h3 { color: var(--ink); }
+
+/* ---------- Cards / grids ---------- */
+.grid { display: grid; gap: 1.25rem; }
+/* Exactly two columns. auto-fit would fit a third at wide viewports and leave the
+   4th RICH value orphaned on its own row — every .grid--2 here wants a true pair. */
+.grid--2 { grid-template-columns: 1fr; }
+/* minmax(0,1fr) — not 1fr — so a long word or email can never force a track wider
+   than its share and push the grid past its container. */
+@media (min-width: 48rem) { .grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  display: flex; flex-direction: column; gap: .75rem;
+}
+.card--link { text-decoration: none; color: inherit; transition: border-color .12s ease, transform .12s ease; }
+.card--link:hover { border-color: var(--mulberry); color: inherit; transform: translateY(-2px); }
+@media (prefers-reduced-motion: reduce) { .card--link { transition: none; } .card--link:hover { transform: none; } }
+.card__icon { width: 32px; height: 32px; color: var(--mulberry); }
+.card h3 { color: var(--ink); }
+.card__more { font-weight: 700; color: var(--mulberry); margin-top: auto; }
+
+/* Person */
+.person { display: flex; flex-direction: column; gap: 1rem; }
+.person__role { font-weight: 700; color: var(--mulberry); font-size: var(--step--1); letter-spacing: .04em; text-transform: uppercase; }
+.person__list { padding-left: 1.1rem; display: flex; flex-direction: column; gap: .35rem; }
+
+/* ---------- Team roster (count-flexible) ----------
+   Each member is one full-width row (photo beside bio) stacked vertically, so ANY
+   number of people — 1, 2, 3, 5 — lays out evenly with no orphaned card. Maps directly
+   to a WordPress "Team Member" loop: one .team-member per entry. */
+.team { display: flex; flex-direction: column; }
+.team-member { display: grid; gap: 1.25rem 2rem; align-items: start; padding: clamp(2rem, 5vw, 3.25rem) 0; }
+.team-member:first-child { padding-top: 0; }
+.team-member + .team-member { border-top: 1px solid var(--line); }
+@media (min-width: 48rem) {
+  .team-member { grid-template-columns: minmax(0, 17rem) minmax(0, 1fr); }
+}
+
+/* Values */
+.value { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start; }
+.value__letter {
+  font-family: var(--font-display); font-size: 2.4rem; line-height: 1;
+  font-weight: 700; color: var(--mulberry); width: 2ch; text-align: center;
+}
+/* Gold only where the ground is obsidian — driven by the band, not by the theme,
+   so it stays correct under prefers-color-scheme AND the manual toggle. */
+.band .value__letter { color: var(--sheen); }
+.value__dual { font-size: var(--step--1); color: var(--ink-2); border-left: 2px solid var(--line-strong); padding-left: .75rem; }
+
+/* Steps — numbered because the referral order is real information. */
+.steps { list-style: none; padding: 0; counter-reset: step; display: flex; flex-direction: column; gap: 1.25rem; }
+.steps > li { counter-increment: step; display: grid; grid-template-columns: auto 1fr; gap: 1.1rem; align-items: start; }
+.steps > li::before {
+  content: counter(step, decimal-leading-zero);
+  font-family: var(--font-util); font-size: var(--step--1); font-weight: 700;
+  color: var(--sheen); border: 1px solid var(--line-strong);
+  border-radius: 50%; width: 2.6rem; height: 2.6rem;
+  display: grid; place-items: center; flex: none;
+}
+
+/* Fact ledger */
+.ledger { list-style: none; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.ledger > li { display: grid; gap: .15rem .75rem; padding-block: .85rem; border-bottom: 1px solid var(--line); }
+@media (min-width: 40rem) { .ledger > li { grid-template-columns: 14rem 1fr; align-items: baseline; } }
+/* In narrow side-columns (hero panels, obsidian bands) a 14rem label column leaves
+   too little room and long emails break mid-word. Stack key over value there so the
+   email keeps the full column width and sits on one line. */
+@media (min-width: 40rem) {
+  .hero__grid .ledger > li,
+  .band .ledger > li,
+  .facet .ledger > li { grid-template-columns: 1fr; row-gap: .1rem; }
+}
+.ledger dt, .ledger__k { color: var(--ink-2); font-size: var(--step--1); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.ledger__v { font-weight: 600; }
+
+/* ---------- Roster: named people, not key/value pairs ----------
+   A person's name is not a field label, so it wears the display face at
+   full size rather than the ledger's uppercase key treatment. */
+.roster { list-style: none; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.roster > li { padding-block: .9rem; border-bottom: 1px solid var(--line); }
+.roster__name { font-family: var(--font-display); font-size: var(--step-1); font-weight: 600; line-height: 1.2; }
+.roster__role {
+  font-size: var(--step--1); font-weight: 700; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--mulberry); margin-top: .1rem;
+}
+.roster__note { font-size: var(--step--1); color: var(--ink-2); margin-top: .35rem; line-height: 1.45; }
+
+/* Callout / placeholder */
+.note {
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 1.1rem 1.25rem;
+  display: flex; flex-direction: column; gap: .5rem;
+}
+.tag {
+  display: inline-block; align-self: flex-start;
+  font-family: var(--font-util); font-size: .75rem; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  padding: .2rem .5rem; border-radius: 3px;
+  background: var(--mulberry); color: var(--paper);
+}
+.band .tag, :root[data-theme="dark"] .tag { background: var(--sheen); color: #17131C; }
+
+.callout {
+  border-left: 4px solid var(--mulberry);
+  background: var(--surface);
+  padding: 1.1rem 1.25rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  display: flex; flex-direction: column; gap: .5rem;
+}
+
+/* ---------- Placeholder photography tiles ---------- */
+.shot { display: flex; flex-direction: column; gap: .6rem; }
+.shot__img { width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface-2); }
+.shot__cap { font-size: var(--step--1); color: var(--ink-2); display: flex; flex-direction: column; gap: .4rem; }
+
+/* ---------- Photo gallery (real photography) ----------
+   Mixed portrait/landscape sources are normalised to a common 4:3 frame
+   so the grid reads as one set rather than a ragged collage. */
+.gallery {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+.frame { display: flex; flex-direction: column; gap: .55rem; margin: 0; }
+.frame img {
+  width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: center;
+  border-radius: var(--radius); border: 1px solid var(--line);
+  background: var(--surface-2); display: block;
+}
+.frame figcaption { font-size: var(--step--1); color: var(--ink-2); line-height: 1.4; }
+
+/* Pull quote — used for testimonials and staff-survey feedback in news. */
+.pull {
+  margin: 1.5rem 0;
+  padding: .25rem 0 .25rem 1.25rem;
+  border-left: 3px solid var(--mulberry);
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+/* ---------- Before / after comparison ----------
+   Both photographs fill one shared 4:3 frame via object-fit, because the
+   source pairs were shot at different orientations and camera positions.
+   The seam is driven by a real range input (see osl.js) so keyboard and
+   touch behaviour is the platform's, not ours. */
+.ba { display: flex; flex-direction: column; gap: .55rem; margin: 0; }
+.ba__stage {
+  --pos: 50%;
+  position: relative; aspect-ratio: 4 / 3; overflow: hidden;
+  border-radius: var(--radius); border: 1px solid var(--line);
+  background: var(--surface-2);
+}
+.ba__img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center; display: block;
+}
+/* The "after" frame is revealed to the right of the seam. */
+.ba__img--after { clip-path: inset(0 0 0 var(--pos)); }
+
+.ba__seam {
+  position: absolute; top: 0; bottom: 0; left: var(--pos);
+  width: 2px; margin-left: -1px; background: var(--sheen);
+  pointer-events: none; z-index: 2;
+}
+.ba__seam::after {
+  content: ""; position: absolute; top: 50%; left: 50%;
+  width: 2.25rem; height: 2.25rem; margin: -1.125rem 0 0 -1.125rem;
+  border-radius: 50%; background: var(--sheen);
+  box-shadow: 0 2px 10px rgba(0,0,0,.45);
+}
+.ba__tag {
+  position: absolute; top: .6rem; z-index: 2; pointer-events: none;
+  font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  padding: .2rem .5rem; border-radius: 3px;
+  background: rgba(23,19,28,.86); color: #F2ECEF;  /* 13.1:1 — fixed, sits over photography */
+}
+.ba__tag--before { left: .6rem; }
+.ba__tag--after  { right: .6rem; }
+
+/* The range fills the stage: click or drag anywhere moves the seam. */
+.ba__range {
+  position: absolute; inset: 0; z-index: 3;
+  width: 100%; height: 100%; margin: 0; padding: 0;
+  -webkit-appearance: none; appearance: none;
+  background: transparent; border: 0; cursor: ew-resize;
+}
+.ba__range::-webkit-slider-runnable-track { background: transparent; border: 0; height: 100%; }
+.ba__range::-webkit-slider-thumb { -webkit-appearance: none; width: 2.75rem; height: 100%; background: transparent; border: 0; cursor: ew-resize; }
+.ba__range::-moz-range-track { background: transparent; border: 0; height: 100%; }
+.ba__range::-moz-range-thumb { width: 2.75rem; height: 12rem; border: 0; border-radius: 0; background: transparent; cursor: ew-resize; }
+.ba__range:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.ba figcaption { font-size: var(--step--1); color: var(--ink-2); line-height: 1.45; }
+
+/* ---------- Forms ---------- */
+.form { display: flex; flex-direction: column; gap: 1.25rem; max-width: 40rem; }
+.field { display: flex; flex-direction: column; gap: .4rem; }
+.field > label { font-weight: 700; }
+.field .hint { font-size: var(--step--1); color: var(--ink-2); }
+.req { color: var(--mulberry); font-weight: 700; }
+input[type="text"], input[type="email"], input[type="tel"], input[type="file"], select, textarea {
+  width: 100%; padding: .7rem .8rem; min-height: 44px;
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--line-strong); border-radius: var(--radius);
+}
+textarea { min-height: 9rem; resize: vertical; }
+select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: right 1.1rem center, right .8rem center; background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; padding-right: 2.4rem; }
+input:hover, select:hover, textarea:hover { border-color: var(--ink); }
+
+.consent { display: grid; grid-template-columns: auto 1fr; gap: .75rem; align-items: start; background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 1rem; }
+.consent input[type="checkbox"] { width: 1.4rem; height: 1.4rem; margin-top: .15rem; accent-color: var(--mulberry); flex: none; }
+.consent label { font-size: var(--step--1); line-height: 1.55; }
+
+/* ---------- Easy read ---------- */
+.easy { font-size: clamp(1.25rem, 1.1rem + .5vw, 1.5rem); line-height: 1.7; }
+.easy h2 { margin-top: .5em; }
+.easy-row {
+  display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 1.25rem; align-items: center;
+  padding: 1rem; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.easy-row + .easy-row { margin-top: .9rem; }
+.easy-row svg { width: 88px; height: 88px; }
+.easy-list { display: flex; flex-direction: column; gap: .9rem; list-style: none; padding: 0; }
+@media (max-width: 34rem) { .easy-row { grid-template-columns: 64px minmax(0, 1fr); } .easy-row svg { width: 64px; height: 64px; } }
+
+/* ---------- Footer ---------- */
+.foot {
+  --paper: #17131C; --surface: #221C29;
+  --ink: #F2ECEF; --ink-2: #BEB3C2;
+  --mulberry: #D98FB8; --mulberry-2: #EFB4D2;
+  --line: #372E40; --line-strong: #7E7288; --focus: #E39B2E;
+  background: var(--paper); color: var(--ink);
+  padding-block: clamp(2.5rem, 6vw, 4rem);
+  border-top: 2px solid var(--sheen);
+}
+.foot__grid { display: grid; gap: 2rem; }
+@media (min-width: 48rem) { .foot__grid { grid-template-columns: 1.4fr 1fr 1fr; } }
+.foot h2 { font-size: var(--step-0); text-transform: uppercase; letter-spacing: .1em; font-family: var(--font-body); font-weight: 700; color: var(--ink-2); }
+.foot ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: .5rem; margin-top: .9rem; }
+.foot a { color: var(--ink); }
+.foot a:hover { color: var(--mulberry); }
+.foot__legal { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: .5rem; font-size: var(--step--1); color: var(--ink-2); }
+/* Compact single-row policy links — dot-separated, wraps on narrow screens. */
+.foot__policies { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .85rem; margin-bottom: .6rem; }
+.foot__policies a { position: relative; color: var(--ink-2); font-weight: 600; }
+.foot__policies a:hover { color: var(--mulberry); }
+.foot__policies a + a::before { content: "\00B7"; position: absolute; left: -.5rem; color: var(--line-strong); font-weight: 400; }
+address { font-style: normal; }
+
+/* ---------- Utilities ---------- */
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.flow > * + * { margin-top: 1rem; }
+.table-scroll { overflow-x: auto; }

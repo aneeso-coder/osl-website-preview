@@ -1,0 +1,11 @@
+{
+  "name": "Obsidian Supported Living",
+  "short_name": "Obsidian",
+  "icons": [
+    { "src": "/assets/img/favicon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/assets/img/favicon-512.png", "type": "image/png", "sizes": "512x512" }
+  ],
+  "theme_color": "#7B2352",
+  "background_color": "#FBF8F9",
+  "display": "browser"
+}
