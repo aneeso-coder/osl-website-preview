@@ -1,0 +1,81 @@
+# ============================================================================
+#  Obsidian Supported Living — Apache config (GoDaddy / cPanel / most hosts)
+#  Handles: error pages, caching, HTTPS + non-www canonical, small hardening.
+#  If the site is moved to WordPress, most of this is replaced by the platform;
+#  keep the canonical redirect and the error-page directives.
+# ============================================================================
+
+# ---- Custom error & maintenance pages --------------------------------------
+ErrorDocument 404 /404.html
+ErrorDocument 500 /error.html
+ErrorDocument 502 /error.html
+ErrorDocument 503 /maintenance.html
+
+# ---- Canonical host: force HTTPS and non-www --------------------------------
+# The live server already 301s www -> non-www; this keeps that behaviour and
+# matches the canonical tags (which all point at the non-www, https host).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
+  # ---- Maintenance mode switch ---------------------------------------------
+  # To take the site down for planned maintenance, uncomment the three lines
+  # below (and set your own IP to keep access while you work). Comment them
+  # back out to bring the site live. Returns a correct 503 so search engines
+  # know it is temporary and do not deindex the site.
+  #   RewriteCond %{REMOTE_ADDR} !=YOUR.IP.ADDRESS.HERE
+  #   RewriteCond %{REQUEST_URI} !^/maintenance\.html$
+  #   RewriteRule ^ /maintenance.html [R=503,L]
+</IfModule>
+<IfModule mod_headers.c>
+  # Ensure the 503 is genuinely temporary and asks crawlers to retry.
+  <FilesMatch "maintenance\.html$">
+    Header set Retry-After "3600"
+  </FilesMatch>
+</IfModule>
+
+# ---- Caching ----------------------------------------------------------------
+# Strategy: cache static assets hard, but NEVER hard-cache the HTML. That way a
+# content update (new page, edited copy) is visible immediately, while CSS, JS,
+# images and fonts stay fast on repeat visits. When you change osl.css / osl.js,
+# bump the ?v= version on the <link>/<script> tags so browsers fetch the new file.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # HTML — always revalidate so edits show up straight away.
+  ExpiresByType text/html                 "access plus 0 seconds"
+  # Versioned assets — safe to cache for a year.
+  ExpiresByType text/css                  "access plus 1 year"
+  ExpiresByType application/javascript    "access plus 1 year"
+  ExpiresByType image/jpeg                "access plus 1 year"
+  ExpiresByType image/png                 "access plus 1 year"
+  ExpiresByType image/webp                "access plus 1 year"
+  ExpiresByType image/svg+xml             "access plus 1 year"
+  ExpiresByType image/x-icon              "access plus 1 year"
+  ExpiresByType font/woff2                 "access plus 1 year"
+  # XML (sitemap) — modest.
+  ExpiresByType application/xml           "access plus 1 day"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(css|js|jpg|jpeg|png|webp|svg|ico|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+# ---- Compression ------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml application/xml
+</IfModule>
+
+# ---- Small hardening --------------------------------------------------------
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+Options -Indexes
