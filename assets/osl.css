@@ -336,6 +336,25 @@ a:hover { color: var(--mulberry-2); text-decoration-thickness: 2px; }
 }
 .facet h2, .facet h3 { color: var(--ink); }
 
+/* Hero photo panel — holds the real home / person-in-home shot opposite the headline.
+   Same clipped-facet corner as .facet so the obsidian motif carries through. */
+.hero__media {
+  margin: 0; border-radius: var(--radius); overflow: hidden;
+  border: 1px solid var(--line);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%);
+}
+.hero__media img {
+  display: block; width: 100%; aspect-ratio: 4 / 5;
+  object-fit: cover; object-position: center; background: var(--surface-2);
+}
+.hero__media figcaption {
+  padding: .95rem 1.1rem 1.1rem; background: var(--surface);
+  font-size: var(--step--1); line-height: 1.45; color: var(--ink-2);
+  display: flex; flex-direction: column; gap: .6rem;
+}
+.hero__media-cta { font-weight: 700; color: var(--mulberry); align-self: start; }
+.hero__media-cta:hover { color: var(--mulberry-2); }
+
 /* ---------- Cards / grids ---------- */
 .grid { display: grid; gap: 1.25rem; }
 /* Exactly two columns. auto-fit would fit a third at wide viewports and leave the
